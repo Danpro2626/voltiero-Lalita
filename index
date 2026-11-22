@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14071f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Voltiero">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preload" href="fonts/sora.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/dm-sans.woff2" as="font" type="font/woff2" crossorigin>
+<title>Voltiero</title>
+<style>
+@font-face{font-family:'Sora';src:url(fonts/sora.woff2) format('woff2');font-weight:100 800;font-display:swap}
+@font-face{font-family:'DM Sans';src:url(fonts/dm-sans.woff2) format('woff2');font-weight:100 1000;font-display:swap}
+:root{
+  --bg:#14071f;--card:#1c0c2d;--card2:#26103c;
+  --p:#ff4fa3;--p2:#ff8ac4;--v:#b48cff;--m:#5cffd0;--y:#ffd75e;--r:#ff4d6d;
+  --t:#fff1fa;--tm:rgba(255,226,246,.58);--line:rgba(255,138,196,.16);
+  --d:'Sora','DM Sans',system-ui,sans-serif;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'DM Sans',system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.4;background:var(--bg);color:var(--t);min-height:100vh;min-height:100dvh;overflow-x:hidden;
+  background-image:radial-gradient(120% 50% at 50% -10%,rgba(255,79,163,.16),transparent 60%);background-repeat:no-repeat}
+button,input{font-family:inherit;touch-action:manipulation}
+button{cursor:pointer}
+svg{display:block}
+main{max-width:480px;margin:0 auto;padding:calc(20px + var(--st)) 18px calc(96px + var(--sb))}
+.pg{display:none}.pg.on{display:block;animation:in .3s ease-out}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+
+/* encabezados */
+.top{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.top i{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--p),var(--v));display:grid;place-items:center;color:#2a0a1f}
+.top i svg{width:18px;height:18px}
+.top b{font:800 1.35rem var(--d);letter-spacing:-.3px;background:linear-gradient(90deg,var(--p2),var(--v));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+h1{font:800 1.9rem var(--d);letter-spacing:-.6px;margin-bottom:20px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:20px;margin-bottom:14px}
+.hero{background:linear-gradient(165deg,#2b1144,#1c0c2d 70%);border-radius:30px;padding:24px 20px 20px}
+
+/* batería */
+.ring{width:min(66vw,260px);aspect-ratio:1;margin:0 auto;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.rt{fill:none;stroke:rgba(255,138,196,.12);stroke-width:8}
+.rf{fill:none;stroke:url(#g);stroke-width:8;stroke-linecap:round;stroke-dasharray:408.4;stroke-dashoffset:408.4;transition:stroke-dashoffset .9s cubic-bezier(.3,.8,.3,1)}
+.rc{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.rc b{font:800 clamp(3.2rem,17vw,4.4rem)/1 var(--d);letter-spacing:-2px}
+.rc b em{font-style:normal;font-size:.42em;letter-spacing:0;color:var(--tm);margin-left:2px}
+.rc small{font-size:.85rem;color:var(--tm);font-weight:500;margin-top:6px}
+.avail{text-align:center;margin-top:18px;color:var(--tm);font-weight:500}
+.avail b{font:700 1.5rem var(--d);color:var(--m);letter-spacing:-.4px}
+.warn{text-align:center;font-weight:700;font-size:.9rem;margin-top:6px;min-height:1.3em}
+.stats{display:grid;grid-template-columns:1fr 1fr;margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+.stats div{text-align:center}
+.stats div+div{border-left:1px solid var(--line)}
+.stats b{display:block;font:800 1.7rem var(--d);letter-spacing:-.6px}
+.stats div:first-child b{color:var(--p2)}.stats div:last-child b{color:var(--v)}
+.stats small{font-size:.82rem;color:var(--tm);font-weight:500}
+
+/* sumar km */
+.seg{display:grid;grid-template-columns:1fr 1fr;background:rgba(255,138,196,.08);border-radius:15px;padding:4px;margin-bottom:16px}
+.seg button{min-height:42px;border:0;border-radius:12px;background:none;color:var(--tm);font-weight:700;font-size:.9rem;transition:.2s}
+.seg button.on{background:var(--p);color:#2a0a1f}
+.lbl{font-size:.88rem;color:var(--tm);font-weight:500;margin-bottom:8px}
+.row{display:flex;gap:10px}
+input{flex:1;min-width:0;min-height:64px;padding:0 14px;border-radius:18px;background:var(--bg);border:1.5px solid var(--line);color:var(--t);font:800 1.8rem var(--d);letter-spacing:-.5px;text-align:center;outline:none;-webkit-appearance:none;appearance:none}
+input::placeholder{color:rgba(255,226,246,.22)}
+input:focus{border-color:var(--p)}
+.add{min-height:64px;padding:0 26px;border:0;border-radius:18px;background:var(--p);color:#2a0a1f;font:700 1.02rem var(--d);flex-shrink:0;transition:transform .15s}
+.add:active,.pill:active{transform:scale(.96)}
+.hint{margin-top:12px;font-size:.9rem;color:var(--tm);font-weight:500;min-height:1.3em;text-align:center}
+.hint b{color:var(--m);font-weight:700}
+.pill{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:52px;border-radius:18px;border:1px solid var(--line);background:none;color:var(--p2);font-weight:700;font-size:.95rem;transition:transform .15s}
+.pill svg{width:17px;height:17px}
+
+/* historial */
+.dh{display:flex;justify-content:space-between;align-items:baseline;margin:22px 4px 8px}
+.dh:first-child{margin-top:0}
+.dh b{font:700 .95rem var(--d)}
+.dh span{font-size:.85rem;color:var(--tm);font-weight:500}
+.list{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:0 16px}
+.tr{display:flex;align-items:center;gap:12px;min-height:60px;border-bottom:1px solid var(--line)}
+.tr:last-child{border:0}
+.tr b{font:800 1.25rem var(--d);letter-spacing:-.4px;color:var(--p2);min-width:74px}
+.tr b i{font:500 .78rem 'DM Sans';font-style:normal;color:var(--tm);margin-left:3px}
+.tr span{flex:1;color:var(--tm);font-size:.88rem;font-weight:500}
+.tr em{font-style:normal;color:var(--v);font-weight:700;font-size:.88rem}
+.tr button{background:none;border:0;color:var(--tm);width:40px;height:40px;display:grid;place-items:center;margin-right:-10px}
+.tr button svg{width:16px;height:16px}
+.empty{text-align:center;color:var(--tm);padding:60px 10px;line-height:1.6}
+.empty svg{width:34px;height:34px;margin:0 auto 12px;color:var(--p);opacity:.7}
+
+/* mi moto */
+.sp{display:flex;justify-content:space-between;align-items:center;min-height:54px;border-bottom:1px solid var(--line)}
+.sp:last-child{border:0}
+.sp span{color:var(--tm);font-weight:500}
+.sp b{font:700 .98rem var(--d)}
+.menu{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.menu button{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:58px;padding:0 18px;background:none;border:0;border-bottom:1px solid var(--line);color:var(--t);font-size:1rem;font-weight:600;text-align:left}
+.menu button:last-child{border:0}
+.menu button:active{background:var(--card2)}
+.menu svg{width:18px;height:18px;color:var(--tm)}
+.menu .d{color:#ff8aa0}.menu .d svg{color:#ff8aa0}
+
+/* menú inferior */
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:rgba(20,7,31,.94);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding-bottom:var(--sb)}
+nav button{flex:1;min-height:62px;background:none;border:0;color:var(--tm);font-size:.74rem;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative}
+nav button svg{width:23px;height:23px}
+nav button.on{color:var(--p2)}
+nav button.on::before{content:'';position:absolute;top:-1px;width:28px;height:3px;border-radius:0 0 4px 4px;background:var(--p)}
+
+.toast{position:fixed;top:calc(14px + var(--st));left:50%;transform:translate(-50%,-90px);z-index:99;max-width:88%;padding:13px 22px;border-radius:16px;background:var(--card2);border:1px solid var(--p);color:var(--p2);font-weight:700;text-align:center;transition:transform .3s cubic-bezier(.3,1.3,.5,1);box-shadow:0 12px 30px rgba(0,0,0,.4)}
+.toast.show{transform:translate(-50%,0)}.toast.err{border-color:var(--r);color:#ff8aa0}
+
+/* bienvenida */
+.ov{position:fixed;inset:0;z-index:100;background:var(--bg);display:none;align-items:center;justify-content:center;padding:22px;background-image:radial-gradient(100% 50% at 50% 0,rgba(255,79,163,.22),transparent 65%)}
+.ov.show{display:flex}
+.ov .card{width:100%;max-width:400px;text-align:center;padding:30px 22px;margin:0}
+.ov .big{width:68px;height:68px;border-radius:22px;margin:0 auto 18px;background:linear-gradient(135deg,var(--p),var(--v));display:grid;place-items:center;color:#2a0a1f}
+.ov .big svg{width:34px;height:34px}
+.ov h2{font:800 1.7rem var(--d);letter-spacing:-.5px;margin-bottom:8px}
+.ov p{color:var(--tm);line-height:1.5;margin-bottom:20px}
+.ov .row{margin-bottom:12px}.ov .add{width:100%}
+.ov .pill{margin-top:12px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8ac4"/><stop offset="1" stop-color="#b48cff"/></linearGradient>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path fill="currentColor" d="M13 2 4 14h6l-1 8 9-12h-6z"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="m9 6 6 6-6 6"/></symbol>
+</defs></svg>
+
+<main>
+<!-- INICIO -->
+<section class="pg on" id="p-inicio">
+  <div class="top"><i><svg><use href="#i-bolt"/></svg></i><b>Voltiero</b></div>
+
+  <div class="card hero">
+    <div class="ring">
+      <svg viewBox="0 0 150 150"><circle class="rt" cx="75" cy="75" r="65"/><circle class="rf" id="rf" cx="75" cy="75" r="65"/></svg>
+      <div class="rc"><b><span id="rp">100</span><em>%</em></b><small>batería</small></div>
+    </div>
+    <div class="avail"><b id="kr">70</b> km disponibles</div>
+    <div class="warn" id="wn"></div>
+    <div class="stats">
+      <div><b id="s-h">0</b><small>km hoy</small></div>
+      <div><b id="s-k">0</b><small>kilometraje</small></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="seg">
+      <button class="on" data-m="total">Kilometraje total</button>
+      <button data-m="viaje">Km del viaje</button>
+    </div>
+    <div class="lbl" id="lbl">Lo que marca tu moto ahora</div>
+    <div class="row">
+      <input type="number" id="k" min="0" step="0.1" inputmode="decimal" placeholder="0" aria-label="Kilómetros">
+      <button class="add" id="add">Sumar</button>
+    </div>
+    <div class="hint" id="h"></div>
+  </div>
+
+  <button class="pill" id="full"><svg><use href="#i-bolt"/></svg>Cargada al 100%</button>
+</section>
+
+<!-- HISTORIAL -->
+<section class="pg" id="p-hist">
+  <h1>Historial</h1>
+  <div id="trips"></div>
+</section>
+
+<!-- MI MOTO -->
+<section class="pg" id="p-moto">
+  <h1>Mi moto</h1>
+  <div class="list">
+    <div class="sp"><span>Batería</span><b>1200 Wh</b></div>
+    <div class="sp"><span>Autonomía máxima</span><b>70 km</b></div>
+    <div class="sp"><span>Peso total</span><b>126.69 kg</b></div>
+    <div class="sp"><span>Presión de llantas</span><b>35 PSI</b></div>
+    <div class="sp"><span>Carga mínima</span><b>20%</b></div>
+    <div class="sp"><span>Aviso de carga</span><b>30%</b></div>
+  </div>
+  <div class="menu">
+    <button id="b-adj">Ajustar % de batería<svg><use href="#i-chev"/></svg></button>
+    <button id="b-odo">Corregir kilometraje<svg><use href="#i-chev"/></svg></button>
+    <button id="b-exp">Exportar datos<svg><use href="#i-chev"/></svg></button>
+    <button id="b-clr" class="d">Borrar todo<svg><use href="#i-chev"/></svg></button>
+  </div>
+</section>
+</main>
+
+<nav>
+  <button class="on" data-p="inicio"><svg viewBox="0 0 24 24"><use href="#i-bolt"/></svg>Inicio</button>
+  <button data-p="hist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg>Historial</button>
+  <button data-p="moto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>Mi moto</button>
+</nav>
+<div class="toast" id="toast"></div>
+
+<div class="ov" id="ov"><div class="card">
+  <div class="big"><svg><use href="#i-bolt"/></svg></div>
+  <h2>¡Bienvenida!</h2>
+  <p>¿Cuántos km marca tu moto ahora mismo?<br>Desde ahí empezamos a contar.</p>
+  <div class="row"><input type="number" id="o-k" min="0" step="0.1" inputmode="decimal" placeholder="Ej: 350" aria-label="Kilometraje actual"></div>
+  <button class="add" id="o-go">Empezar</button>
+  <button class="pill" id="o-skip">Empiezo desde 0</button>
+</div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const SPEC={auto:70,min:20,warn:30};
+const KR='voltR1',KB='voltB1',KO='voltO1',KS='voltS1';
+let reg=[],bat=100,odo=0,setup=false,mode='total';
+try{reg=JSON.parse(localStorage.getItem(KR))||[];const b=parseFloat(localStorage.getItem(KB));bat=isNaN(b)?100:b;odo=parseFloat(localStorage.getItem(KO))||0;setup=localStorage.getItem(KS)==='1'}catch(e){}
+function save(){try{localStorage.setItem(KR,JSON.stringify(reg));localStorage.setItem(KB,bat);localStorage.setItem(KO,odo);localStorage.setItem(KS,setup?'1':'0')}catch(e){}}
+const uso=km=>km/SPEC.auto*100;
+const r1=n=>Math.round(n*10)/10;
+const loc=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString();
+const nowStr=()=>loc(new Date()).slice(0,16);
+let tt;function toast(m,err){const e=$('toast');e.textContent=m;e.className='toast show'+(err?' err':'');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),2500)}
+
+function draw(){
+  const p=Math.max(0,Math.min(100,bat)),c=p<=SPEC.min?'var(--r)':p<=SPEC.warn?'var(--y)':'';
+  $('rp').textContent=Math.round(p);
+  $('rf').style.strokeDashoffset=408.4*(1-p/100);$('rf').style.stroke=c||'url(#g)';
+  $('kr').textContent=Math.round(SPEC.auto*p/100);
+  const w=$('wn');w.textContent=p<=SPEC.min?'¡Carga ya!':p<=SPEC.warn?'Carga pronto':'';w.style.color=c;
+  const hoy=nowStr().slice(0,10);
+  $('s-h').textContent=r1(reg.filter(r=>r.fecha.slice(0,10)===hoy).reduce((s,r)=>s+r.km,0));
+  $('s-k').textContent=r1(odo);
+}
+
+function dayLabel(k){
+  const hoy=loc(new Date()).slice(0,10),ayer=loc(new Date(Date.now()-864e5)).slice(0,10);
+  if(k===hoy)return 'Hoy';if(k===ayer)return 'Ayer';
+  return new Date(k+'T12:00').toLocaleDateString('es',{weekday:'short',day:'numeric',month:'short'}).replace('.','')
+}
+function trips(){
+  const c=$('trips');
+  if(!reg.length){c.innerHTML='<div class="empty"><svg viewBox="0 0 24 24"><use href="#i-bolt"/></svg>Aún no hay recorridos.<br>Suma tus km en Inicio.</div>';return}
+  const days={};
+  reg.map((r,i)=>({r,i})).reverse().slice(0,200).forEach(x=>{(days[x.r.fecha.slice(0,10)]=days[x.r.fecha.slice(0,10)]||[]).push(x)});
+  c.innerHTML=Object.keys(days).sort().reverse().map(k=>{
+    const tot=r1(days[k].reduce((s,x)=>s+x.r.km,0));
+    return `<div class="dh"><b>${dayLabel(k)}</b><span>${tot} km</span></div><div class="list">`+
+      days[k].map(({r,i})=>`<div class="tr"><b>${r.km}<i>km</i></b><span>${new Date(r.fecha).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'})}</span><em>${r.bateriaUsada.toFixed(0)}%</em><button data-i="${i}" aria-label="Borrar recorrido"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>`).join('')+`</div>`}).join('');
+  c.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    if(!confirm('¿Borrar este recorrido?'))return;
+    const i=+b.dataset.i,r=reg[i];bat=Math.min(100,bat+r.bateriaUsada);odo=Math.max(0,r1(odo-r.km));reg.splice(i,1);save();draw();trips();setMode(mode);toast('Recorrido borrado')});
+}
+
+// sumar km: kilometraje total o km del viaje
+function getKm(){const v=parseFloat($('k').value);return isNaN(v)?null:r1(mode==='total'?v-odo:v)}
+function hint(){
+  const km=getKm(),last=`Último registro: <b>${r1(odo)} km</b>`;
+  $('h').innerHTML=km===null?(mode==='total'?last:''):km<=0?(mode==='total'?`Tiene que ser mayor a <b>${r1(odo)} km</b>`:''):`Hiciste <b>${km} km</b> · gastas ~${uso(km).toFixed(0)}% de batería`}
+function setMode(m){mode=m;
+  document.querySelectorAll('.seg button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+  $('lbl').textContent=m==='total'?'Lo que marca tu moto ahora':'¿Cuántos km hiciste?';
+  $('k').placeholder=m==='total'?String(Math.round(odo)):'0';$('k').value='';hint()}
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+$('k').oninput=hint;
+$('add').onclick=()=>{
+  const km=getKm();
+  if(km===null)return toast('Escribe el kilometraje',1);
+  if(km<=0)return toast(mode==='total'?`Tiene que ser mayor a ${r1(odo)} km`:'Los km deben ser mayores a 0',1);
+  const u=uso(km);bat=Math.max(0,bat-u);odo=r1(odo+km);
+  reg.push({fecha:nowStr(),km,bateriaUsada:u});
+  save();draw();setMode(mode);$('k').blur();
+  toast(bat<=SPEC.min?'Guardado · ¡a cargar la moto!':`¡Sumaste ${km} km!`,bat<=SPEC.min);
+};
+
+// bienvenida
+function ov(){$('ov').classList.toggle('show',!setup)}
+function start(v){odo=v;setup=true;save();draw();setMode(mode);ov();toast('¡Lista para rodar!')}
+$('o-go').onclick=()=>{const v=parseFloat($('o-k').value);if(isNaN(v)||v<0)return toast('Escribe los km que marca tu moto',1);start(v)};
+$('o-skip').onclick=()=>start(0);
+
+// botones
+$('full').onclick=()=>{bat=100;save();draw();toast('Batería al 100%')};
+$('b-adj').onclick=()=>{const v=prompt(`Batería actual: ${Math.round(bat)}%\nNuevo valor (0 a 100):`);if(v===null)return;const n=parseFloat(v);
+  if(!isNaN(n)&&n>=0&&n<=100){bat=n;save();draw();toast('Ajustada a '+Math.round(n)+'%')}else toast('Escribe un número de 0 a 100',1)};
+$('b-odo').onclick=()=>{const v=prompt(`Kilometraje actual: ${r1(odo)}\nNuevo kilometraje de tu moto:`);if(v===null)return;const n=parseFloat(v);
+  if(!isNaN(n)&&n>=0){odo=n;save();draw();setMode(mode);toast('Kilometraje corregido')}else toast('Escribe un número válido',1)};
+$('b-exp').onclick=()=>{
+  const d=JSON.stringify({moto:'Evobike Voltiero',recorridos:reg,bateriaActual:bat,kilometraje:odo},null,2);
+  const a=document.createElement('a');a.href='data:application/json,'+encodeURIComponent(d);a.download='voltiero-'+nowStr().slice(0,10)+'.json';a.click();toast('Datos exportados')};
+$('b-clr').onclick=()=>{if(confirm('¿Borrar TODO el historial? No se puede deshacer.')){reg=[];odo=0;bat=100;setup=false;save();draw();trips();ov();toast('Historial borrado')}};
+
+// menú
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('.pg').forEach(s=>s.classList.toggle('on',s.id==='p-'+b.dataset.p));
+  if(b.dataset.p==='hist')trips();scrollTo(0,0)});
+
+draw();setMode('total');ov();
+if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
